@@ -2,7 +2,7 @@
 
 ![QuickPath Logo](src/main/resources/static/Logo_QuickPath.png)
 
-A sophisticated Vehicle Routing Problem (VRP) solution designed specifically for pizza delivery management. This Spring Boot application optimally assigns delivery orders to riders while calculating the most efficient routes using Google's OR-Tools for Capacitated Vehicle Routing Problem (CVRP) solving.
+A solution designed specifically for pizza delivery management. This Spring Boot application optimally assigns delivery orders to riders while calculating the most efficient routes using Google's OR-Tools for Capacitated Vehicle Routing Problem (CVRP) solving.
 
 ## 📋 Table of Contents
 
