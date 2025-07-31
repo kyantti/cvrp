@@ -14,7 +14,7 @@ import org.json.JSONObject;
 public final class DistanceMatrixCalculator {
 
     private static final String API_URL = "https://maps.googleapis.com/maps/api/distancematrix/json";
-    private static final String API_KEY = "AIzaSyC-OiLfbvtxPNzq6ZcFaUnLJj67zgu2RVY";
+    private static final String API_KEY = "";
     
     private static DistanceMatrixCalculator instance;
 
