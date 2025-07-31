@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Food Delivery Orders</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+body {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas, cada una con el mismo tamaño */
+    grid-template-rows: repeat(2, 1fr); /* Dos filas, cada una con el mismo tamaño */
+    gap: 20px; /* Espacio entre las celdas */
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    margin: 0;
+    background-color: #f8f9fc;
+    font-family: 'Poppins', sans-serif;
+}
+
+.grid-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+h4 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+}
+
+table {
+    width: 100%;
+    height: 100%; /* Las tablas ocupan todo el espacio disponible */
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 0.9rem;
+    table-layout: fixed; /* Asegura que las columnas tengan un tamaño uniforme */
+}
+
+thead th {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: none;
+}
+
+tbody td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f8f9fc;
+}
+
+tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    transform: scale(1.05);
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+        grid-template-rows: repeat(4, 1fr); /* Cuatro filas */
+    }
+
+    .grid-container {
+        padding: 15px;
+    }
+
+    h4 {
+        font-size: 1.3rem;
+    }
+
+    table {
+        font-size: 0.8rem;
+    }
+}
+
+</style>
+</head>
+<body>
+
+	<div class="alert-container">
+		<div class="alert alert-danger alert-dismissible fade show"
+			role="alert" th:if="${error}">
+			<span th:text="${error}"></span>
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	</div>
+
+	<!-- Pending Orders -->
+	<div class="grid-container" style="grid-column: 1; grid-row: 1;">
+		<h4>Pending Orders</h4>
+		<form th:action="@{/orders/updateStatus}" method="post">
+			<input type="hidden" name="status" value="READY" />
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Select</th>
+						<th>ID</th>
+						<th>Customer</th>
+						<th>Number of Items</th>
+						<th>Destination</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="order : ${pendingOrders}">
+						<td><input type="checkbox" name="ids" th:value="${order.id}" />
+						</td>
+						<td th:text="${order.id}">ID</td>
+						<td th:text="${order.customer}">Customer</td>
+						<td th:text="${order.numOfItems}">Number of Items</td>
+						<td th:text="${order.destination}">Destination</td>
+					</tr>
+				</tbody>
+			</table>
+			<button type="submit" class="btn btn-success mt-3">Mark as
+				Ready</button>
+		</form>
+	</div>
+
+	<!-- Ready Orders -->
+	<div class="grid-container" style="grid-column: 2; grid-row: 1;">
+		<h4>Ready Orders</h4>
+		<form th:action="@{/orders/updateStatus}" method="post">
+			<input type="hidden" />
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Select</th>
+						<th>ID</th>
+						<th>Customer</th>
+						<th>Number of Items</th>
+						<th>Destination</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="order : ${readyOrders}">
+						<td><input type="checkbox" name="ids" th:value="${order.id}" />
+						</td>
+						<td th:text="${order.id}">ID</td>
+						<td th:text="${order.customer}">Customer</td>
+						<td th:text="${order.numOfItems}">Number of Items</td>
+						<td th:text="${order.destination}">Destination</td>
+					</tr>
+				</tbody>
+			</table>
+			<button type="submit" class="btn btn-success mt-3" name="status"
+				value="ASSIGNED">Assign</button>
+			<button type="submit" class="btn btn-warning mt-3" name="status"
+				value="PENDING">Mark as Pending</button>
+		</form>
+	</div>
+
+	<!-- Assigned Orders -->
+	<div class="grid-container" style="grid-column: 1; grid-row: 2;">
+		<h4>Assigned Orders</h4>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Select</th>
+					<th>ID</th>
+					<th>Customer</th>
+					<th>Number of Items</th>
+					<th>Destination</th>
+					<th>Rider Name</th>
+					<th>Rider Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="order : ${assignedOrders}">
+					<td><input type="checkbox" name="ids" th:value="${order.id}" />
+					</td>
+					<td th:text="${order.id}">ID</td>
+					<td th:text="${order.customer}">Customer</td>
+					<td th:text="${order.numOfItems}">Number of Items</td>
+					<td th:text="${order.destination}">Destination</td>
+					<td th:text="${order.rider.getName()}">Rider Name</td>
+					<td th:text="${order.rider.getStatus().toString()}">Rider
+						Status</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="grid-container" style="grid-column: 2; grid-row: 2;">
+		<h4>Orders on the way</h4>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Customer</th>
+					<th>Number of Items</th>
+					<th>Destination</th>
+					<th>Rider Name</th>
+					<th>Rider Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="order : ${onRoadOrders}">
+					<td th:text="${order.id}">ID</td>
+					<td th:text="${order.customer}">Customer</td>
+					<td th:text="${order.numOfItems}">Number of Items</td>
+					<td th:text="${order.destination}">Destination</td>
+					<td th:text="${order.rider.getName()}">Rider Name</td>
+					<td th:text="${order.rider.getStatus().toString()}">Rider
+						Status</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

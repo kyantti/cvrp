@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to QuickPath</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .logo {
+            width: 400px;
+            height: auto;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 50px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .btn-secondary:hover {
+            background-color: #6c757d;
+            transform: scale(1.05);
+        }
+        footer {
+            background-color: #343a40;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    Welcome to QuickPath
+</header>
+
+<div class="main-container">
+    <img src="/Logo_QuickPath.png" alt="QuickPath Logo" class="logo"> <!-- Replace with actual logo path -->
+    <div class="button-group">
+        <a href="/riders" class="btn btn-primary">Show Riders</a>
+        <a href="/orders" class="btn btn-secondary">Show Orders</a>
+    </div>
+</div>
+
+<footer>
+    &copy; 2024 QuickPath. All rights reserved. - Creators: Pablo Setrakian Bearzotti & Diego González Rodríguez
+</footer>
+
+</body>
+</html>

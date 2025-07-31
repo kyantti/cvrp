@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Food Delivery Riders</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+body {
+	font-family: 'Poppins', sans-serif;
+	background-color: #f4f7fa;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0;
+}
+
+.container {
+	flex: 1;
+	width: 100%;
+	height:100%;
+	margin: 10px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	padding: 30px;
+	display: flex;
+    flex-direction: column;
+}
+
+h1 {
+	text-align: center;
+	margin-bottom: 30px;
+	color: #333;
+	font-size: 2.5rem;
+	font-weight: 600;
+}
+
+table {
+	width: 100%;
+	table-layout: fixed;
+	min-height: 200px;
+	border-radius: 10px;
+	overflow: hidden;
+	border: none;
+}
+
+th, td {
+	text-align: center;
+	vertical-align: middle;
+	padding: 20px;
+	font-size: 1rem;
+	color: #444;
+}
+
+th {
+	background-color: #007bff;
+	color: #fff;
+	font-weight: 600;
+}
+
+td {
+	background-color: #f8f9fa;
+	transition: background-color 0.3s ease;
+	min-height: 200px;
+}
+
+td:hover {
+	background-color: #e2e6ea;
+}
+
+.logo {
+	width: auto;
+	height: auto;
+	margin-top: 10px;
+}
+
+.btn {
+	width: 100%;
+	padding: 12px;
+	border-radius: 5px;
+	font-size: 1rem;
+	font-weight: 600;
+	transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+	background-color: #007bff;
+	border: none;
+}
+
+.btn-primary:hover {
+	background-color: #0056b3;
+}
+
+.btn-success {
+	background-color: #28a745;
+	border: none;
+}
+
+.btn-success:hover {
+	background-color: #218838;
+}
+
+/* Estilo adicional para las imágenes */
+td img {
+	display: block;
+	margin: 0 auto;
+	max-width: 167px;
+}
+
+/* Espaciado entre filas */
+tr {
+	border-bottom: 1px solid #ddd;
+}
+
+tr:last-child {
+	border-bottom: none;
+}
+
+.action-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center-top;
+	align-items: center-top;
+}
+
+/* Responsive Design */
+@media ( max-width : 768px) {
+	.container {
+		width: 95%;
+		padding: 20px;
+	}
+	table {
+		font-size: 0.9rem;
+	}
+}
+
+</style>
+</head>
+<body>
+
+	<div class="container">
+		<div class="alert alert-danger alert-dismissible fade show"
+			role="alert" th:if="${error}">
+			<span th:text="${error}"></span>
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+		<h4>Food Delivery Riders</h4>
+		<table class="table table-bordered">
+			<colgroup>
+		        <col style="width: 4%;"> <!-- Ancho para la columna ID -->
+		        <col style="width: 6%;"> <!-- Ancho para la columna Name -->
+		        <col style="width: 15%;"> <!-- Ancho para la columna Status -->
+		        <col style="width: 9%;"> <!-- Ancho para la columna Capacity -->
+		        <col style="width: 10%;"> <!-- Ancho para la columna Number of rides -->
+		        <col style="width: 20%;"> <!-- Ancho para la columna Assigned Orders -->
+		        <col style="width: 20%;"> <!-- Ancho para la columna QR -->
+		    	<col style="width: 10%;"> <!-- Ancho para la columna Update Status -->
+		    	<col style="width: 6%;">
+	    	</colgroup>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Status</th>
+					<th>Capacity</th>
+					<th>Number of rides</th>
+					<th>Assigned Orders</th>
+					<th>QR</th>
+					<th>Update Status</th>
+					<th>Time Out</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="rider : ${riders}">
+					<td th:text="${rider.id}">ID</td>
+					<td th:text="${rider.name}">Name</td>
+					<td th:text="${rider.status}">Status</td>
+					<td th:text="${rider.capacity}">Capacity</td>
+					<td th:text="${rider.numOfRides}">Number of rides</td>
+					<td>
+						<div th:each="order : ${rider.currentOrders}">
+							<p>
+								<strong>Customer:</strong> <span th:text="${order.customer}">Customer</span>
+							</p>
+							<p>
+								<strong>Items:</strong> <span th:text="${order.numOfItems}">Items</span>
+							</p>
+							<p>
+								<strong>Destination:</strong> <span
+									th:text="${order.destination}">Destination</span>
+							</p>
+						</div>
+					</td>
+					<td>
+    					<div th:if="${rider.currentOrders.size() == 0}">
+        					EMPTY
+    					</div>
+    					<div th:if="${rider.currentOrders.size() != 0}">
+        					<img th:src="@{'/qr_' + ${rider.id} + '.png'}" alt="Ruta QR" class="logo">
+    					</div>
+					</td>
+					<td class="action-container">
+						<!-- Condicional para mostrar el botón Start o Finish dependiendo del estado -->
+						<div th:if="${rider.status.name() == 'AT_RESTAURANT'}">
+							<form th:action="@{/updateRiderStatus}" method="post"
+								id="start-form-[[${rider.id}]]">
+								<input type="hidden" th:name="riderId" th:value="${rider.id}" />
+								<button type="submit" class="btn btn-primary">Start
+									Journey</button>
+							</form>
+						</div>
+						<div th:if="${rider.status.name() == 'ON_THE_WAY'}">
+							<form th:action="@{/updateRiderStatus}" method="post"
+								id="finish-form-[[${rider.id}]]">
+								<input type="hidden" th:name="riderId" th:value="${rider.id}" />
+								<button type="submit" class="btn btn-success">Finish
+									Journey</button>
+							</form>
+						</div>
+					</td>
+
+
+					<td th:text="${rider.timeOut}">Time Out</td>
+					<!-- Display Time Out -->
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	
+
+</body>
+</html>
